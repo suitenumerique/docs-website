@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap — Docs</title>
+<meta name="description" content="How Docs gets built: the public institutions funding it, the open-source dependencies it relies on, what's planned next, and what's already shipped.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-docs.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a href="#top" class="skip-link">Skip to content</a>
+
+<!-- ================= NAV ================= -->
+<header class="site-nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/icon-docs.svg" width="32" height="32" alt="">
+      Docs
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#ai">AI</a>
+      <a href="index.html#commons">Open source</a>
+      <a href="#top">Roadmap</a>
+      <a href="index.html#get-started">Get started</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-secondary" href="https://github.com/suitenumerique/docs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.17-.89-1.17-.72-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.67.07-.52.28-.87.5-1.08-1.78-.2-3.65-.89-3.65-3.96 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.08-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        16.6k
+      </a>
+      <a class="btn btn-primary" href="https://docs.la-suite.eu/docs/9137bbb5-3e8a-4ff7-8a36-fcc4e8bd57f4/" target="_blank" rel="noopener">Try the demo</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= INTRO ================= -->
+  <section class="article">
+    <div class="wrap">
+      <div class="eyebrow reveal in">Roadmap</div>
+      <h1 class="reveal in">How Docs gets built</h1>
+      <p>Docs is an <em class="hl">open-source</em> project (the code is open and reusable) and a digital commons (a community contributes, and various stakeholders fund and decide on developments).</p>
+      <p>Today, it is mainly public institutions who participate:</p>
+      <ul class="funder-list">
+        <li><strong>DINUM 🇫🇷</strong> — Interministerial Directorate for Digital Affairs (<span class="native-name">Direction Interministérielle du Numérique</span>)</li>
+        <li><strong>ZenDiS 🇩🇪</strong> — Center for Digital Sovereignty (<span class="native-name">Zentrum für Digitale Souveränität</span>)</li>
+        <li><strong>MinBZK 🇳🇱</strong> — Ministry of the Interior and Kingdom Relations (<span class="native-name">Ministerie van Binnenlandse Zaken en Koninkrijksrelaties</span>)</li>
+        <li><strong>EC 🇪🇺</strong> — European Commission (<span class="native-name">Commission Européenne</span>)</li>
+      </ul>
+      <p>Docs is built on open-source libraries, some of which are listed as "dependencies" in the feature list below because that is where development is needed to offer them to Docs users.</p>
+      <h2>Our most important dependencies</h2>
+      <div class="table-wrap">
+        <table class="deps-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Origin</th>
+              <th>Maturity</th>
+              <th>Downloads / month</th>
+              <th>Funded by Docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://www.django-rest-framework.org/" target="_blank" rel="noopener">Django Rest Framework</a></td>
+              <td>🇬🇧 UK</td>
+              <td>Very mature — created in 2011, considered feature-complete by its maintainers; maintenance is focused on stability and Django/Python compatibility.</td>
+              <td class="num">~28M</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><a href="https://nextjs.org/" target="_blank" rel="noopener">Next.js</a></td>
+              <td>🇺🇸 US</td>
+              <td>Mature — launched in 2016, maintained by Vercel, widely adopted in production, but evolves rapidly (structural changes between major versions).</td>
+              <td class="num">~165M</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.blocknotejs.org/" target="_blank" rel="noopener">BlockNote.js</a></td>
+              <td>🇳🇱 Netherlands</td>
+              <td>Young — recent project under active development, API still evolving, growing community. Maintained by a small team of 3 developers.</td>
+              <td class="num">~1.5M</td>
+              <td>Yes (🇫🇷 DINUM, 🇩🇪 ZenDiS, 🇪🇺 EC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://yjs.dev/" target="_blank" rel="noopener">Yjs</a></td>
+              <td>🇩🇪 Germany</td>
+              <td>Mature — the reference for CRDTs in collaborative editing, stable, production-tested by many products. Maintained by a single developer.</td>
+              <td class="num">~25M</td>
+              <td>Yes (🇫🇷 DINUM, 🇩🇪 ZenDiS, 🇪🇺 EC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://docs.rs/docspec/latest/docspec/" target="_blank" rel="noopener">DocSpec</a></td>
+              <td>🇳🇱 Netherlands</td>
+              <td>Emerging — very active development (v1.20.0 released late June 2026), but format coverage is still partial. Maintained by a single developer.</td>
+              <td class="num">N/A</td>
+              <td>Yes (🇫🇷 DINUM, 🇪🇺 EC)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>If some are very mature, others are still young or sometimes maintained by a single developer. We are proud to fund their work and encourage other organizations to do the same, to avoid the following situation:</p>
+      <figure class="xkcd-figure reveal">
+        <img src="assets/xkcd-dependency.png" width="770" height="978" alt="xkcd comic 'Dependency': a towering, precarious stack of blocks labeled 'All modern digital infrastructure' balanced entirely on one small block, with an arrow reading 'A project some random person in Nebraska has been thanklessly maintaining since 2003'.">
+        <figcaption>"Dependency," <a href="https://xkcd.com/2347/" target="_blank" rel="noopener">xkcd</a> — CC BY-NC 2.5</figcaption>
+      </figure>
+      <p>It is possible and desirable to work directly with these maintainers. This benefits the entire commons ecosystem, because this is how we build commons (<a href="https://wemakecommons.org/" target="_blank" rel="noopener">WeMakeCommons</a>).</p>
+      <p>We presented a playbook on how to do this well at FOSDEM — you can watch the <a href="https://fosdem.org/2026/schedule/event/DC97FQ-building_digital_workplace_solutions_on_top_of_foundational_libraries_blocknote_/" target="_blank" rel="noopener">conference video</a> or read the <a href="https://github.com/virgile-dev/playbook-work-with-oss-libraries" target="_blank" rel="noopener">playbook</a> itself. Feel free to draw inspiration from it, and share your feedback. See <a href="fosdem.html">all our FOSDEM talks</a> for the rest of what we presented in 2025 and 2026.</p>
+    </div>
+  </section>
+
+  <!-- ================= PLANNED: S2 2026 ================= -->
+  <section id="planned">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Planned</div>
+        <h2>Semester 2, 2026</h2>
+        <p>What we're planning to build next.</p>
+      </div>
+      <div class="roadmap-list">
+        <div class="roadmap-item reveal">
+          <h3>Point to a document section with <em>direct links to blocks</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/issues/653" target="_blank" rel="noopener">Issue #653</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Stay up to date with <em>mentions and notifications</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/issues/2326" target="_blank" rel="noopener">Issue #2326</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Migrate your LibreOffice documents with <em>.odt imports</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇪🇺 EC</span>
+            <a href="https://github.com/suitenumerique/docs/issues/1240" target="_blank" rel="noopener">Issue #1240</a>
+          </div>
+          <div class="roadmap-deps">Dependency: <a href="https://github.com/docspec" target="_blank" rel="noopener">DocSpec</a></div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Track who did what with <em>change attribution</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇪🇺 EC</span>
+            <span class="funder-pill">🇩🇪 ZenDiS</span>
+            <a href="https://github.com/suitenumerique/docs/issues/119" target="_blank" rel="noopener">Issue #119</a>
+          </div>
+          <div class="roadmap-deps">Dependencies: <a href="https://github.com/yjs/yjs/blob/4303ebdc9b1fc2fee2c43ced9f48d1b7d6e50420/attribution-manager.md" target="_blank" rel="noopener">Yjs</a>, <a href="https://github.com/TypeCellOS/BlockNote" target="_blank" rel="noopener">BlockNote</a></div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Write and display <em>equations and diagrams</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2 (mermaid.js and LaTeX)</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇪🇺 EC</span>
+            <a href="https://github.com/TypeCellOS/BlockNote/pull/2857" target="_blank" rel="noopener">Issue</a>
+          </div>
+          <div class="roadmap-deps">Dependency: <a href="https://github.com/TypeCellOS/BlockNote" target="_blank" rel="noopener">BlockNote</a></div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Find a document via <em>content search</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/issues/1493" target="_blank" rel="noopener">Issue #1493</a>
+          </div>
+          <div class="roadmap-deps">Dependency: OpenSearch (via <a href="https://github.com/suitenumerique/find" target="_blank" rel="noopener">Find</a>)</div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3><em>Suggest document improvements</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇪🇺 EC</span>
+            <span class="funder-pill">🇩🇪 ZenDiS</span>
+            <a href="https://github.com/suitenumerique/docs/issues/2491" target="_blank" rel="noopener">Issue #2491</a>
+          </div>
+          <div class="roadmap-deps">Dependencies: Yjs and BlockNote</div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Organize your documents with <em>Drive</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill planned">Planned · TBD</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/issues/2492" target="_blank" rel="noopener">Issue #2492</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SHIPPED: S1 2026 ================= -->
+  <section id="s1-2026" style="background:var(--gray-025);">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Shipped</div>
+        <h2>Semester 1, 2026</h2>
+      </div>
+      <div class="roadmap-list">
+        <div class="roadmap-item reveal">
+          <h3>Make Docs easy to customize <em>without forking</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇩🇪 ZenDiS</span>
+            <a href="https://github.com/suitenumerique/docs/blob/main/docs/customization.md" target="_blank" rel="noopener">Technical documentation</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Save time with <em>silent authentication</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/1690" target="_blank" rel="noopener">Pull request</a>
+          </div>
+          <p class="roadmap-desc">If you're already logged into another app with ProConnect.</p>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Ease user onboarding with <em>first-login modal and onboarding checklist duplication</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/1868" target="_blank" rel="noopener">PR #1868</a>
+            <a href="https://github.com/suitenumerique/docs/pull/1891" target="_blank" rel="noopener">PR #1891</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Migrate to Docs easily with <em>document imports (.docx, .md)</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <span class="funder-pill">🇳🇱 MinBZK</span>
+            <span class="funder-pill">🇪🇺 EC</span>
+            <a href="https://github.com/suitenumerique/docs/pull/1609" target="_blank" rel="noopener">Pull request</a>
+          </div>
+          <div class="roadmap-deps">Dependency: <a href="https://github.com/docspec" target="_blank" rel="noopener">DocSpec</a></div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Get screen-faithful exports with <em>the "Print" option</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/1832" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Make Docs <em>partially accessible</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://ara.numerique.gouv.fr/rapport/NQm_a0q0oJUVhg9_jVjUE/resultats" target="_blank" rel="noopener">RGAA audit</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Find your sub-documents <em>with extended search</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2310" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Allow other applications to integrate with Docs <em>with the Resource Server API</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/1923" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Turn your text into slides with <em>"Presentation" mode</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2321" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Find your comments and table of contents with <em>the right sidebar panel</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2279" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Clean up your document list with <em>the "Leave" option</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2410" target="_blank" rel="noopener">PR #2410</a>
+            <a href="https://github.com/suitenumerique/docs/pull/2365" target="_blank" rel="noopener">PR #2365</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Exercise your GDPR rights <em>with account deletion</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2437" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Search a public knowledge base with <em>anonymous search</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · Q2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+            <a href="https://github.com/suitenumerique/docs/pull/2407" target="_blank" rel="noopener">Pull request</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SHIPPED: 2025 ================= -->
+  <section id="y2025">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Shipped</div>
+        <h2>2025</h2>
+      </div>
+      <div class="roadmap-list">
+        <div class="roadmap-item reveal">
+          <h3>Organize your documents with <em>sub-documents</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S1</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Highlight what matters first with <em>collapsible blocks</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S1</span>
+            <span class="funder-pill">🇫🇷 ANCT</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Display and format data with <em>advanced tables</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S2</span>
+            <span class="funder-pill">🇳🇱 BlockNote</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Organize your content with <em>columns</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S2</span>
+            <span class="funder-pill">🇳🇱 BlockNote</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Export your content <em>as PDF, ODT, DOCX, and HTML</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S2</span>
+            <span class="funder-pill">🇩🇪 ZenDiS</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Restore your deleted documents with <em>the trash bin</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S2</span>
+            <span class="funder-pill">🇫🇷 DINUM</span>
+          </div>
+        </div>
+        <div class="roadmap-item reveal">
+          <h3>Collaborate asynchronously by leaving <em>comments</em></h3>
+          <div class="roadmap-meta">
+            <span class="status-pill shipped">Shipped · S2</span>
+            <span class="funder-pill">🇩🇪 ZenDiS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section>
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Want to help shape what's next?</h2>
+        <p>Open an issue, join the discussion, or fund a feature your organization needs.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary btn-lg" href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Open an issue</a>
+          <a class="btn btn-secondary btn-lg" href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/icon-docs.svg" width="32" height="32" alt="">
+          Docs
+        </div>
+        <p class="footer-desc">An open-source, self-hostable text editor — built as a digital commons, for anyone to run.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Project</h3>
+        <ul>
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#ai">AI</a></li>
+          <li><a href="index.html#commons">Open source</a></li>
+          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href="https://digitalpublicgoods.net/r/docs-collaborative-text-editing" target="_blank" rel="noopener">Digital Public Good listing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="https://github.com/suitenumerique/docs" target="_blank" rel="noopener">Source code</a></li>
+          <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/installation/README.md" target="_blank" rel="noopener">Installation guide</a></li>
+          <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/instances.md" target="_blank" rel="noopener">Public instances</a></li>
+          <li><a href="https://github.com/suitenumerique/docs/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Community</h3>
+        <ul>
+          <li><a href="fosdem.html">FOSDEM talks</a></li>
+          <li><a href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a></li>
+          <li><a href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Docs is free and open-source software, released under the MIT license.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
