@@ -266,6 +266,50 @@
     .sticker-wall{gap:18px;}
   }
 
+  /* ---------- Hacker News sensation ---------- */
+  .hn-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:56px; align-items:center;}
+  .hn-grid .lead{font-size:16.5px; color:var(--gray-700); line-height:1.6; margin-top:14px;}
+  .hn-grid .lead strong{color:var(--brand-650);}
+  .hn-stats{display:flex; gap:28px; margin-top:26px; flex-wrap:wrap;}
+  .hn-stat{display:flex; flex-direction:column; gap:2px;}
+  .hn-stat-value{font-size:26px; font-weight:800; color:var(--gray-900); letter-spacing:-0.01em;}
+  .hn-stat-label{font-size:12.5px; color:var(--gray-600); text-transform:uppercase; letter-spacing:.03em;}
+  .hn-sticker{display:flex; align-items:center; justify-content:center;}
+  .hn-sticker img{
+    width:100%; max-width:360px; height:auto; border-radius:var(--radius-md);
+    border:1px solid var(--gray-100); box-shadow:var(--shadow-lg); transform:rotate(-2deg);
+  }
+  .star-chart-card{
+    margin-top:52px; background:#fff; border:1px solid var(--gray-100); border-radius:var(--radius-lg);
+    padding:28px 30px 12px; box-shadow:var(--shadow-sm);
+  }
+  .star-chart-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:8px;}
+  .star-chart-head h3{font-size:16px;}
+  .star-chart-head p{font-size:13px; color:var(--gray-500);}
+  .star-chart{position:relative; width:100%;}
+  .star-chart svg{display:block; width:100%; height:auto; overflow:visible;}
+  .star-chart .sc-grid{stroke:var(--gray-100); stroke-width:1;}
+  .star-chart .sc-axis-label{fill:var(--gray-500); font-size:11px; font-family:var(--font-base);}
+  .star-chart .sc-area{fill:var(--brand-500); fill-opacity:.1;}
+  .star-chart .sc-line{fill:none; stroke:var(--brand-650); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+  .star-chart .sc-end-dot{fill:var(--brand-650); stroke:#fff; stroke-width:2;}
+  .star-chart .sc-end-label{fill:var(--gray-900); font-size:13px; font-weight:700; font-family:var(--font-base);}
+  .star-chart .sc-annotation-dot{fill:var(--brand-650); stroke:#fff; stroke-width:2;}
+  .star-chart .sc-annotation-line{stroke:var(--gray-300); stroke-width:1;}
+  .star-chart .sc-annotation-label{fill:var(--gray-700); font-size:11.5px; font-family:var(--font-base);}
+  .star-chart .sc-annotation-label tspan.emoji{font-size:12.5px;}
+  .star-chart .sc-crosshair{stroke:var(--gray-300); stroke-width:1; pointer-events:none;}
+  .star-chart-tooltip{
+    position:absolute; pointer-events:none; background:var(--gray-900); color:#fff; border-radius:8px;
+    padding:7px 10px; font-size:12.5px; line-height:1.4; box-shadow:var(--shadow-md); opacity:0; transform:translate(-50%,-100%);
+    transition:opacity .1s ease; white-space:nowrap; z-index:3;
+  }
+  .star-chart-tooltip.visible{opacity:1;}
+  .star-chart-tooltip b{font-weight:700;}
+  @media (max-width:640px){
+    .star-chart-card{padding:20px 14px 8px;}
+  }
+
   /* ---------- contributors ---------- */
   .contributor-wall{display:flex; flex-wrap:wrap; justify-content:center; gap:10px;}
   .contributor-avatar{
@@ -366,6 +410,9 @@
     .hero h1{font-size:40px;}
     .feat-grid{grid-template-columns:1fr 1fr;}
     .ai-grid{grid-template-columns:1fr; gap:36px;}
+    .hn-grid{grid-template-columns:1fr; gap:32px;}
+    .hn-sticker{order:-1;}
+    .hn-sticker img{max-width:280px;}
     .sec-grid{grid-template-columns:1fr 1fr;}
     .paths{grid-template-columns:1fr;}
     .footer-top{grid-template-columns:1fr 1fr; gap:36px;}
