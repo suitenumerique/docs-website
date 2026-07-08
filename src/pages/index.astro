@@ -1,41 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Docs — Turn your team's content into knowledge</title>
-<meta name="description" content="Docs is the open-source document editor that turns your team's content into knowledge: real-time collaboration, structured knowledge, and full data ownership. Self-host it anywhere, or try a public instance in seconds.">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-docs.svg">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import RoadmapItem from '../components/RoadmapItem.astro';
+import { fetchRoadmapSection, ROADMAP_SOURCES } from '../lib/roadmap';
 
-<a href="#top" class="skip-link">Skip to content</a>
+const planned = await fetchRoadmapSection(ROADMAP_SOURCES.planned);
+---
 
-<!-- ================= NAV ================= -->
-<header class="site-nav">
-  <div class="wrap nav-inner">
-    <a href="#top" class="brand">
-      <img src="assets/logo-docs-oss.svg" width="87" height="35" alt="Docs">
-    </a>
-    <nav class="nav-links" id="navLinks">
-      <a href="#features">Features</a>
-      <a href="#ai">AI</a>
-      <a href="#commons">Open source</a>
-      <a href="roadmap.html">Roadmap</a>
-      <a href="#get-started">Get started</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-    <div class="nav-cta">
-      <a class="btn btn-secondary" href="https://github.com/suitenumerique/docs" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.17-.89-1.17-.72-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.67.07-.52.28-.87.5-1.08-1.78-.2-3.65-.89-3.65-3.96 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.08-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
-        16.6k
-      </a>
-      <a class="btn btn-primary" href="https://docs.la-suite.eu/docs/9137bbb5-3e8a-4ff7-8a36-fcc4e8bd57f4/" target="_blank" rel="noopener">Try the demo</a>
-      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</header>
+<Layout title="Docs — Turn your team's content into knowledge" description="Docs is the open-source document editor that turns your team's content into knowledge: real-time collaboration, structured knowledge, and full data ownership. Self-host it anywhere, or try a public instance in seconds.">
+  <Header current="home" />
 
 <main id="top">
 
@@ -298,7 +272,7 @@
           <p>Real history, pulled from the GitHub API.</p>
         </div>
         <div class="star-chart" id="starChart">
-          <script type="application/json" id="starHistoryData">[{"date":"2024-04-30T19:01:10Z","count":1},{"date":"2024-09-04T14:28:13Z","count":6},{"date":"2024-12-16T23:19:02Z","count":11},{"date":"2025-01-14T20:42:24Z","count":21},{"date":"2025-01-31T11:07:59Z","count":31},{"date":"2025-03-16T11:36:25Z","count":76},{"date":"2025-03-16T13:00:50Z","count":100},{"date":"2025-03-16T16:50:31Z","count":1000},{"date":"2025-03-17T10:53:47Z","count":4000},{"date":"2025-03-18T09:56:26Z","count":6000},{"date":"2025-03-20T10:23:09Z","count":8000},{"date":"2025-03-27T20:25:11Z","count":10000},{"date":"2025-04-10T08:03:57Z","count":11000},{"date":"2025-05-22T13:08:51Z","count":12000},{"date":"2025-08-24T16:04:38Z","count":13000},{"date":"2025-11-01T23:30:25Z","count":14000},{"date":"2025-12-27T14:14:47Z","count":15000},{"date":"2026-02-24T06:33:43Z","count":16000},{"date":"2026-07-05T11:30:36Z","count":16641}]</script>
+          <script type="application/json" id="starHistoryData" is:inline>[{"date":"2024-04-30T19:01:10Z","count":1},{"date":"2024-09-04T14:28:13Z","count":6},{"date":"2024-12-16T23:19:02Z","count":11},{"date":"2025-01-14T20:42:24Z","count":21},{"date":"2025-01-31T11:07:59Z","count":31},{"date":"2025-03-16T11:36:25Z","count":76},{"date":"2025-03-16T13:00:50Z","count":100},{"date":"2025-03-16T16:50:31Z","count":1000},{"date":"2025-03-17T10:53:47Z","count":4000},{"date":"2025-03-18T09:56:26Z","count":6000},{"date":"2025-03-20T10:23:09Z","count":8000},{"date":"2025-03-27T20:25:11Z","count":10000},{"date":"2025-04-10T08:03:57Z","count":11000},{"date":"2025-05-22T13:08:51Z","count":12000},{"date":"2025-08-24T16:04:38Z","count":13000},{"date":"2025-11-01T23:30:25Z","count":14000},{"date":"2025-12-27T14:14:47Z","count":15000},{"date":"2026-02-24T06:33:43Z","count":16000},{"date":"2026-07-05T11:30:36Z","count":16641}]</script>
         </div>
       </div>
     </div>
@@ -396,76 +370,7 @@
         <p>What's planned for Semester 2, 2026 — and the public institutions funding it.</p>
       </div>
       <div class="roadmap-list">
-        <div class="roadmap-item reveal">
-          <h3>Point to a document section with <em>direct links to blocks</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <a href="https://github.com/suitenumerique/docs/issues/653" target="_blank" rel="noopener">Issue #653</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Stay up to date with <em>mentions and notifications</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <a href="https://github.com/suitenumerique/docs/issues/2326" target="_blank" rel="noopener">Issue #2326</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Migrate your LibreOffice documents with <em>.odt imports</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <span class="funder-pill">🇪🇺 EC</span>
-            <a href="https://github.com/suitenumerique/docs/issues/1240" target="_blank" rel="noopener">Issue #1240</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Track who did what with <em>change attribution</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <span class="funder-pill">🇪🇺 EC</span>
-            <span class="funder-pill">🇩🇪 ZenDiS</span>
-            <a href="https://github.com/suitenumerique/docs/issues/119" target="_blank" rel="noopener">Issue #119</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Write and display <em>equations and diagrams</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <span class="funder-pill">🇪🇺 EC</span>
-            <a href="https://github.com/TypeCellOS/BlockNote/pull/2857" target="_blank" rel="noopener">Issue</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Find a document via <em>content search</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <a href="https://github.com/suitenumerique/docs/issues/1493" target="_blank" rel="noopener">Issue #1493</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3><em>Suggest document improvements</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · S2</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <span class="funder-pill">🇪🇺 EC</span>
-            <span class="funder-pill">🇩🇪 ZenDiS</span>
-            <a href="https://github.com/suitenumerique/docs/issues/2491" target="_blank" rel="noopener">Issue #2491</a>
-          </div>
-        </div>
-        <div class="roadmap-item reveal">
-          <h3>Organize your documents with <em>Drive</em></h3>
-          <div class="roadmap-meta">
-            <span class="status-pill planned">Planned · TBD</span>
-            <span class="funder-pill">🇫🇷 DINUM</span>
-            <a href="https://github.com/suitenumerique/docs/issues/2492" target="_blank" rel="noopener">Issue #2492</a>
-          </div>
-        </div>
+        {planned.map((item) => <RoadmapItem item={item} />)}
       </div>
       <p style="text-align:center; margin-top:32px;">
         <a class="btn btn-secondary" href="roadmap.html">See the full roadmap →</a>
@@ -602,51 +507,5 @@ make run</pre></div>
 
 </main>
 
-<!-- ================= FOOTER ================= -->
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand">
-          <img src="assets/icon-docs.svg" width="32" height="32" alt="">
-          Docs
-        </div>
-        <p class="footer-desc">An open-source, self-hostable text editor — built as a digital commons, for anyone to run.</p>
-      </div>
-      <div class="footer-col">
-        <h3>Project</h3>
-        <ul>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#ai">AI</a></li>
-          <li><a href="#commons">Open source</a></li>
-          <li><a href="roadmap.html">Roadmap</a></li>
-          <li><a href="https://digitalpublicgoods.net/r/docs-collaborative-text-editing" target="_blank" rel="noopener">Digital Public Good listing</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h3>Resources</h3>
-        <ul>
-          <li><a href="https://github.com/suitenumerique/docs" target="_blank" rel="noopener">Source code</a></li>
-          <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/installation/README.md" target="_blank" rel="noopener">Installation guide</a></li>
-          <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/instances.md" target="_blank" rel="noopener">Public instances</a></li>
-          <li><a href="https://github.com/suitenumerique/docs/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing guide</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h3>Community</h3>
-        <ul>
-          <li><a href="fosdem.html">FOSDEM talks</a></li>
-          <li><a href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a></li>
-          <li><a href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Report an issue</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>Docs is free and open-source software, released under the MIT license.</span>
-    </div>
-  </div>
-</footer>
-
-<script src="script.js"></script>
-</body>
-</html>
+  <Footer current="home" />
+</Layout>

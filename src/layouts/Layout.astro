@@ -1,0 +1,33 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+// Root-relative so it also works if this ever deploys under a subpath
+// (GitHub Pages project site without a custom domain) instead of at a
+// domain root.
+const base = (import.meta.env.BASE_URL + '/').replace('//', '/');
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<meta name="description" content={description}>
+<link rel="icon" type="image/svg+xml" href={`${base}assets/favicon-docs.svg`}>
+<link rel="stylesheet" href={`${base}styles.css`}>
+</head>
+<body>
+
+<a href="#top" class="skip-link">Skip to content</a>
+
+<slot />
+
+<script src={`${base}script.js`} is:inline></script>
+</body>
+</html>

@@ -5,3 +5,8 @@ LaSuite-Docs-Documentation-utilisateurs/
 .DS_Store
 Thumbs.db
 *.swp
+
+# Astro / Node build output
+node_modules/
+dist/
+.astro/

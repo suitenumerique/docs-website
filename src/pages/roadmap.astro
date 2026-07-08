@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import RoadmapItem from '../components/RoadmapItem.astro';
+import { fetchRoadmapSection, ROADMAP_SOURCES } from '../lib/roadmap';
+
+const [planned, shipped2026, shipped2025] = await Promise.all([
+  fetchRoadmapSection(ROADMAP_SOURCES.planned),
+  fetchRoadmapSection(ROADMAP_SOURCES.s1_2026),
+  fetchRoadmapSection(ROADMAP_SOURCES.y2025),
+]);
+---
+
+<Layout title="Roadmap — Docs" description="How Docs gets built: the public institutions funding it, the open-source dependencies it relies on, what's planned next, and what's already shipped.">
+  <Header current="roadmap" />
+
+<main id="top">
+
+  <!-- ================= INTRO ================= -->
+  <section class="article">
+    <div class="wrap">
+      <div class="eyebrow reveal in">Roadmap</div>
+      <h1 class="reveal in">How Docs gets built</h1>
+      <p>Docs is an <em class="hl">open-source</em> project (the code is open and reusable) and a digital commons (a community contributes, and various stakeholders fund and decide on developments).</p>
+      <p>Today, it is mainly public institutions who participate:</p>
+      <ul class="funder-list">
+        <li><strong>DINUM 🇫🇷</strong> — Interministerial Directorate for Digital Affairs (<span class="native-name">Direction Interministérielle du Numérique</span>)</li>
+        <li><strong>ZenDiS 🇩🇪</strong> — Center for Digital Sovereignty (<span class="native-name">Zentrum für Digitale Souveränität</span>)</li>
+        <li><strong>MinBZK 🇳🇱</strong> — Ministry of the Interior and Kingdom Relations (<span class="native-name">Ministerie van Binnenlandse Zaken en Koninkrijksrelaties</span>)</li>
+        <li><strong>EC 🇪🇺</strong> — European Commission (<span class="native-name">Commission Européenne</span>)</li>
+      </ul>
+      <p>Docs is built on open-source libraries, some of which are listed as "dependencies" in the feature list below because that is where development is needed to offer them to Docs users.</p>
+      <h2>Our most important dependencies</h2>
+      <div class="table-wrap">
+        <table class="deps-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Origin</th>
+              <th>Maturity</th>
+              <th>Downloads / month</th>
+              <th>Funded by Docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://www.django-rest-framework.org/" target="_blank" rel="noopener">Django Rest Framework</a></td>
+              <td>🇬🇧 UK</td>
+              <td>Very mature — created in 2011, considered feature-complete by its maintainers; maintenance is focused on stability and Django/Python compatibility.</td>
+              <td class="num">~28M</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><a href="https://nextjs.org/" target="_blank" rel="noopener">Next.js</a></td>
+              <td>🇺🇸 US</td>
+              <td>Mature — launched in 2016, maintained by Vercel, widely adopted in production, but evolves rapidly (structural changes between major versions).</td>
+              <td class="num">~165M</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.blocknotejs.org/" target="_blank" rel="noopener">BlockNote.js</a></td>
+              <td>🇳🇱 Netherlands</td>
+              <td>Young — recent project under active development, API still evolving, growing community. Maintained by a small team of 3 developers.</td>
+              <td class="num">~1.5M</td>
+              <td>Yes (🇫🇷 DINUM, 🇩🇪 ZenDiS, 🇪🇺 EC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://yjs.dev/" target="_blank" rel="noopener">Yjs</a></td>
+              <td>🇩🇪 Germany</td>
+              <td>Mature — the reference for CRDTs in collaborative editing, stable, production-tested by many products. Maintained by a single developer.</td>
+              <td class="num">~25M</td>
+              <td>Yes (🇫🇷 DINUM, 🇩🇪 ZenDiS, 🇪🇺 EC)</td>
+            </tr>
+            <tr>
+              <td><a href="https://docs.rs/docspec/latest/docspec/" target="_blank" rel="noopener">DocSpec</a></td>
+              <td>🇳🇱 Netherlands</td>
+              <td>Emerging — very active development (v1.20.0 released late June 2026), but format coverage is still partial. Maintained by a single developer.</td>
+              <td class="num">N/A</td>
+              <td>Yes (🇫🇷 DINUM, 🇪🇺 EC)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>If some are very mature, others are still young or sometimes maintained by a single developer. We are proud to fund their work and encourage other organizations to do the same, to avoid the following situation:</p>
+      <figure class="xkcd-figure reveal">
+        <img src="assets/xkcd-dependency.png" width="770" height="978" alt="xkcd comic 'Dependency': a towering, precarious stack of blocks labeled 'All modern digital infrastructure' balanced entirely on one small block, with an arrow reading 'A project some random person in Nebraska has been thanklessly maintaining since 2003'.">
+        <figcaption>"Dependency," <a href="https://xkcd.com/2347/" target="_blank" rel="noopener">xkcd</a> — CC BY-NC 2.5</figcaption>
+      </figure>
+      <p>It is possible and desirable to work directly with these maintainers. This benefits the entire commons ecosystem, because this is how we build commons (<a href="https://wemakecommons.org/" target="_blank" rel="noopener">WeMakeCommons</a>).</p>
+      <p>We presented a playbook on how to do this well at FOSDEM — you can watch the <a href="https://fosdem.org/2026/schedule/event/DC97FQ-building_digital_workplace_solutions_on_top_of_foundational_libraries_blocknote_/" target="_blank" rel="noopener">conference video</a> or read the <a href="https://github.com/virgile-dev/playbook-work-with-oss-libraries" target="_blank" rel="noopener">playbook</a> itself. Feel free to draw inspiration from it, and share your feedback. See <a href="fosdem.html">all our FOSDEM talks</a> for the rest of what we presented in 2025 and 2026.</p>
+    </div>
+  </section>
+
+  <!-- ================= PLANNED: S2 2026 ================= -->
+  <section id="planned">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Planned</div>
+        <h2>Semester 2, 2026</h2>
+        <p>What we're planning to build next.</p>
+      </div>
+      <div class="roadmap-list">
+        {planned.map((item) => <RoadmapItem item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SHIPPED: S1 2026 ================= -->
+  <section id="s1-2026" style="background:var(--gray-025);">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Shipped</div>
+        <h2>Semester 1, 2026</h2>
+      </div>
+      <div class="roadmap-list">
+        {shipped2026.map((item) => <RoadmapItem item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SHIPPED: 2025 ================= -->
+  <section id="y2025">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Shipped</div>
+        <h2>2025</h2>
+      </div>
+      <div class="roadmap-list">
+        {shipped2025.map((item) => <RoadmapItem item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section>
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Want to help shape what's next?</h2>
+        <p>Open an issue, join the discussion, or fund a feature your organization needs.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary btn-lg" href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Open an issue</a>
+          <a class="btn btn-secondary btn-lg" href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+  <Footer current="roadmap" />
+</Layout>

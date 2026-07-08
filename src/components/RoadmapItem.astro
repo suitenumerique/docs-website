@@ -1,0 +1,22 @@
+---
+import type { RoadmapItem } from '../lib/roadmap';
+
+interface Props {
+  item: RoadmapItem;
+}
+
+const { item } = Astro.props;
+---
+
+<div class="roadmap-item reveal">
+  <h3>{item.titlePrefix}{item.titlePrefix && item.titleEmphasis ? ' ' : ''}{item.titleEmphasis && <em>{item.titleEmphasis}</em>}</h3>
+  <div class="roadmap-meta">
+    {item.statusText && <span class={`status-pill ${item.statusClass}`}>{item.statusText}</span>}
+    {item.funders.map((funder) => <span class="funder-pill">{funder}</span>)}
+    {item.links.map((link) => (
+      <a href={link.url} target="_blank" rel="noopener">{link.label}</a>
+    ))}
+  </div>
+  {item.depHtml && <div class="roadmap-deps" set:html={item.depHtml} />}
+  {item.description && <p class="roadmap-desc">{item.description}</p>}
+</div>
