@@ -441,6 +441,8 @@
 .article .wrap{max-width:760px;}
 .article .eyebrow{display:block; text-align:left;}
 .article h1{font-size:38px; line-height:1.2; margin-bottom:20px;}
+.back-link{display:inline-block; font-size:14px; font-weight:600; color:var(--gray-600); text-decoration:none; margin-bottom:16px;}
+.back-link:hover{color:var(--brand-650);}
 .article .lead{font-size:19px; line-height:1.6; color:var(--gray-600); margin-bottom:36px;}
 .article p{font-size:16px; line-height:1.75; color:var(--gray-700); margin-bottom:18px;}
 .article h2{font-size:28px; line-height:1.3; margin:52px 0 16px; letter-spacing:-.01em;}
@@ -513,6 +515,7 @@ table.deps-table th{
 table.deps-table td{color:var(--gray-700);}
 table.deps-table td.num{font-variant-numeric:tabular-nums; white-space:nowrap;}
 table.deps-table a{color:var(--brand-650); text-decoration:underline;}
+table.deps-table p{margin:0;}
 
 .xkcd-figure{max-width:340px; margin:32px auto; text-align:center;}
 .xkcd-figure img{width:100%; height:auto; display:block; border-radius:10px; border:1px solid var(--gray-100);}

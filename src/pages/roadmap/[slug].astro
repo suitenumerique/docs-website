@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import RoadmapItem from '../../components/RoadmapItem.astro';
+import { fetchRoadmapChildren, fetchRoadmapSection, type RoadmapChild } from '../../lib/roadmap';
+
+export async function getStaticPaths() {
+  const children = await fetchRoadmapChildren();
+  return children.map((child) => ({
+    params: { slug: child.slug },
+    props: { child },
+  }));
+}
+
+interface Props {
+  child: RoadmapChild;
+}
+
+const { child } = Astro.props;
+const items = await fetchRoadmapSection(child.id);
+---
+
+<Layout
+  title={`${child.title} — Roadmap — Docs`}
+  description={`Part of the Docs roadmap: ${child.title}.`}
+>
+  <Header current="roadmap" />
+
+<main id="top">
+
+  <section class="article" style="padding-bottom:32px;">
+    <div class="wrap">
+      <a href="/roadmap.html" class="back-link">← Back to the roadmap</a>
+      <h1 class="reveal in">{child.title}</h1>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="roadmap-list">
+        {items.map((item) => <RoadmapItem item={item} />)}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+  <Footer current="roadmap" />
+</Layout>

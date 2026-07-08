@@ -5,14 +5,22 @@
 // publishing workflow for its own roadmap.
 
 const DOCUMENT_URL = 'https://docs.numerique.gouv.fr/api/v1.0/documents/';
-const CONTENT_URL = (docId: string) =>
+const MARKDOWN_URL = (docId: string) =>
   `${DOCUMENT_URL}${docId}/formatted-content/?content_format=markdown`;
+const HTML_URL = (docId: string) =>
+  `${DOCUMENT_URL}${docId}/formatted-content/?content_format=html`;
+const CHILDREN_URL = (docId: string) => `${DOCUMENT_URL}${docId}/children/`;
 
 export const ROADMAP_SOURCES = {
   planned: '1e2a0b10-bc55-4b47-94f6-6b854acc3050',
   s1_2026: '924009cb-7ee7-4b18-b872-a351e5f6d33c',
   y2025: '9e10fa80-7fbc-412b-a3c3-2bf19ef5d17a',
 } as const;
+
+// Parent document listing the above as children — its own content (intro,
+// dependencies, "looking for funding" list) is rendered on /roadmap, and
+// each child becomes a /roadmap/<slug> subpage.
+export const ROADMAP_ROOT_ID = 'd1d3788e-c619-41ff-abe8-2d079da2f084';
 
 const FUNDER_ABBREVIATIONS: Record<string, string> = {
   'European Commission': 'EC',
@@ -51,7 +59,7 @@ function parseFunders(text: string): string[] {
   const pills: string[] = [];
   for (let token of tokens) {
     token = token.replace(/^and\s+/i, '').trim();
-    if (!token) continue;
+    if (!token || token === '?') continue;
     const flagMatch = token.match(FLAG_RE);
     const flag = flagMatch ? flagMatch[0] : '';
     let name = token.replace(FLAG_RE, '').trim();
@@ -62,7 +70,10 @@ function parseFunders(text: string): string[] {
 }
 
 function parseStatus(segment: string): { cssClass: 'planned' | 'shipped'; text: string } {
-  const isPlanned = segment.includes('\u{1F300}') || segment.includes('Planned');
+  // Anything that isn't explicitly shipped (✅) is treated as "planned" —
+  // this also covers newer statuses like "To be confirmed `?`" or
+  // "🌀 : `in beta`" that don't say the word "Planned" or use 🌀.
+  const isPlanned = !segment.includes('✅');
   const codeMatch = segment.match(/`([^`]*)`/);
   const codeRaw = codeMatch ? codeMatch[1] : '';
   const codeClean = codeRaw.replace(/[✅\u{1F300}]/gu, '').trim();
@@ -70,9 +81,9 @@ function parseStatus(segment: string): { cssClass: 'planned' | 'shipped'; text: 
 
   let rest = segment;
   if (codeMatch) rest = rest.replace(codeMatch[0], '');
-  rest = rest.replace(/Planned:?/, '');
+  rest = rest.replace(/Planned:?/, '').replace(/To be confirmed:?/, '');
   rest = rest.replace(/✅/g, '').replace(/\u{1F300}/gu, '');
-  const extra = rest.replace(/^[\s|]+|[\s|]+$/g, '').trim();
+  const extra = rest.replace(/^[\s|:]+|[\s|:]+$/g, '').trim();
 
   const label = isPlanned ? 'Planned' : 'Shipped';
   let text = `${label} · ${codeDisplay}`;
@@ -96,7 +107,7 @@ function parseLinks(
   otherLinks: { label: string; url: string }[]
 ) {
   for (const match of segment.matchAll(MD_LINK_RE)) {
-    const [full, label, url] = match;
+    const [, label, url] = match;
     const pullMatch = url.match(/\/pull\/(\d+)/);
     const issueMatch = url.match(/\/issues\/(\d+)/);
     if (pullMatch) {
@@ -203,7 +214,18 @@ function parseItems(markdownContent: string): RoadmapItem[] {
 }
 
 async function fetchMarkdown(docId: string): Promise<string> {
-  const res = await fetch(CONTENT_URL(docId));
+  const res = await fetch(MARKDOWN_URL(docId));
+  if (!res.ok) {
+    throw new Error(`Failed to fetch Docs document ${docId}: ${res.status}`);
+  }
+  const payload = await res.json();
+  const content = payload.content;
+  if (!content) throw new Error(`No content returned for document ${docId}`);
+  return content;
+}
+
+async function fetchHtml(docId: string): Promise<string> {
+  const res = await fetch(HTML_URL(docId));
   if (!res.ok) {
     throw new Error(`Failed to fetch Docs document ${docId}: ${res.status}`);
   }
@@ -225,4 +247,119 @@ export function fetchRoadmapSection(docId: string): Promise<RoadmapItem[]> {
     cache.set(docId, promise);
   }
   return promise;
+}
+
+export interface RoadmapChild {
+  id: string;
+  title: string;
+  slug: string;
+}
+
+function slugify(title: string): string {
+  return title
+    .replace(/[^\p{L}\p{N}\s-]/gu, '') // strip emoji/punctuation
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-');
+}
+
+let childrenCache: Promise<RoadmapChild[]> | null = null;
+
+export function fetchRoadmapChildren(): Promise<RoadmapChild[]> {
+  if (!childrenCache) {
+    childrenCache = (async () => {
+      const res = await fetch(CHILDREN_URL(ROADMAP_ROOT_ID));
+      if (!res.ok) {
+        throw new Error(`Failed to fetch roadmap children: ${res.status}`);
+      }
+      const payload = await res.json();
+      const results: { id: string; title: string }[] = payload.results ?? [];
+      return results.map((r) => ({ id: r.id, title: r.title, slug: slugify(r.title) }));
+    })();
+  }
+  return childrenCache;
+}
+
+function splitMarkdownSections(markdown: string): { heading: string; body: string }[] {
+  const sections: { heading: string; body: string }[] = [];
+  const headingRe = /^## (.+)$/gm;
+  const matches = [...markdown.matchAll(headingRe)];
+  matches.forEach((match, i) => {
+    const heading = match[1].trim();
+    const start = (match.index ?? 0) + match[0].length;
+    const end = i + 1 < matches.length ? matches[i + 1].index ?? markdown.length : markdown.length;
+    sections.push({ heading, body: markdown.slice(start, end) });
+  });
+  return sections;
+}
+
+function splitHtmlSections(html: string): { heading: string; html: string }[] {
+  // Splits on top-level <h2>...</h2> boundaries produced by the Docs HTML export.
+  const parts = html.split(/(<h2[^>]*>.*?<\/h2>)/s);
+  const sections: { heading: string; html: string }[] = [];
+  for (let i = 1; i < parts.length; i += 2) {
+    const headingMatch = parts[i].match(/<h2[^>]*>(.*?)<\/h2>/s);
+    const heading = headingMatch ? headingMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+    sections.push({ heading, html: parts[i + 1] ?? '' });
+  }
+  return sections;
+}
+
+export interface RoadmapRoot {
+  introHtml: string;
+  contributeLead: string | null;
+  contributeItems: RoadmapItem[];
+}
+
+let rootCache: Promise<RoadmapRoot> | null = null;
+
+export function fetchRoadmapRoot(): Promise<RoadmapRoot> {
+  if (!rootCache) {
+    rootCache = (async () => {
+      const [html, markdown, children] = await Promise.all([
+        fetchHtml(ROADMAP_ROOT_ID),
+        fetchMarkdown(ROADMAP_ROOT_ID),
+        fetchRoadmapChildren(),
+      ]);
+
+      // Point the doc's own links to the children (external docs.numerique.gouv.fr
+      // URLs) at the subpages we generate for them instead.
+      let rewrittenHtml = html;
+      for (const child of children) {
+        rewrittenHtml = rewrittenHtml.replaceAll(
+          `https://docs.numerique.gouv.fr/docs/${child.id}/`,
+          `/roadmap/${child.slug}.html`
+        );
+      }
+
+      const htmlSections = splitHtmlSections(rewrittenHtml);
+      const introSection = htmlSections.find((s) => /intro/i.test(s.heading));
+      const roadmapSection = htmlSections.find((s) => /^roadmap$/i.test(s.heading));
+      let introHtml = (introSection?.html ?? '') + (roadmapSection?.html ?? '');
+
+      // The Docs HTML export emits a bare <table>; reuse our existing
+      // .deps-table styling instead of adding new CSS just for this.
+      introHtml = introHtml
+        .replace(/<table>/g, '<div class="table-wrap"><table class="deps-table">')
+        .replace(/<\/table>/g, '</table></div>');
+
+      const markdownSections = splitMarkdownSections(markdown);
+      const contributeSection = markdownSections.find((s) => /contribute/i.test(s.heading));
+
+      let contributeLead: string | null = null;
+      let contributeItems: RoadmapItem[] = [];
+      if (contributeSection) {
+        const firstItemIdx = contributeSection.body.search(/^### /m);
+        const leadText =
+          firstItemIdx === -1
+            ? contributeSection.body
+            : contributeSection.body.slice(0, firstItemIdx);
+        contributeLead = leadText.trim() || null;
+        contributeItems = parseItems(contributeSection.body);
+      }
+
+      return { introHtml, contributeLead, contributeItems };
+    })();
+  }
+  return rootCache;
 }

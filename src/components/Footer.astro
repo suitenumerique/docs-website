@@ -7,6 +7,10 @@ interface Props {
 
 const { current } = Astro.props;
 
+// Same rationale as Header.astro: root-relative so this still resolves
+// correctly from nested pages like /roadmap/<slug>.
+const base = (import.meta.env.BASE_URL + '/').replace('//', '/');
+
 const footerDesc =
   current === 'manifesto'
     ? "An open-source, self-hostable alternative to Notion or Google Docs — built as a digital commons, for anyone to run."
@@ -14,7 +18,7 @@ const footerDesc =
 
 const fifthProjectItem =
   current === 'manifesto'
-    ? { href: 'manifesto.html', label: 'Manifesto', external: false }
+    ? { href: `${base}manifesto.html`, label: 'Manifesto', external: false }
     : {
         href: 'https://digitalpublicgoods.net/r/docs-collaborative-text-editing',
         label: 'Digital Public Good listing',
@@ -29,7 +33,7 @@ const showFosdemLink = current !== 'home' && current !== 'manifesto';
     <div class="footer-top">
       <div>
         <div class="footer-brand">
-          <img src="assets/icon-docs.svg" width="32" height="32" alt="">
+          <img src={`${base}assets/icon-docs.svg`} width="32" height="32" alt="">
           Docs
         </div>
         <p class="footer-desc">{footerDesc}</p>
@@ -37,10 +41,10 @@ const showFosdemLink = current !== 'home' && current !== 'manifesto';
       <div class="footer-col">
         <h3>Project</h3>
         <ul>
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#ai">AI</a></li>
-          <li><a href="index.html#commons">Open source</a></li>
-          <li><a href="roadmap.html">Roadmap</a></li>
+          <li><a href={`${base}index.html#features`}>Features</a></li>
+          <li><a href={`${base}index.html#ai`}>AI</a></li>
+          <li><a href={`${base}index.html#commons`}>Open source</a></li>
+          <li><a href={`${base}roadmap.html`}>Roadmap</a></li>
           <li>
             {
               fifthProjectItem.external ? (
@@ -64,7 +68,7 @@ const showFosdemLink = current !== 'home' && current !== 'manifesto';
       <div class="footer-col">
         <h3>Community</h3>
         <ul>
-          {showFosdemLink && <li><a href="fosdem.html">FOSDEM talks</a></li>}
+          {showFosdemLink && <li><a href={`${base}fosdem.html`}>FOSDEM talks</a></li>}
           <li><a href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a></li>
           <li><a href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Report an issue</a></li>
         </ul>

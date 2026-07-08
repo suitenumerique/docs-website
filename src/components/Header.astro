@@ -7,27 +7,32 @@ interface Props {
 
 const { current } = Astro.props;
 
-const brandHref = current === 'home' ? '#top' : 'index.html';
+// Root-relative (via BASE_URL) rather than page-relative, since this
+// component is shared by pages at different depths (e.g. the flat
+// top-level pages vs. nested /roadmap/<slug> subpages).
+const base = (import.meta.env.BASE_URL + '/').replace('//', '/');
 
-const crossLink = (hash: string) => (current === 'home' ? `#${hash}` : `index.html#${hash}`);
+const brandHref = current === 'home' ? '#top' : `${base}index.html`;
+
+const crossLink = (hash: string) => (current === 'home' ? `#${hash}` : `${base}index.html#${hash}`);
 
 const roadmapItem =
   current === 'roadmap'
     ? { href: '#top', label: 'Roadmap' }
-    : { href: 'roadmap.html', label: 'Roadmap' };
+    : { href: `${base}roadmap.html`, label: 'Roadmap' };
 
 const fifthItem =
   current === 'home'
     ? { href: '#get-started', label: 'Get started' }
     : current === 'manifesto'
       ? { href: '#top', label: 'Manifesto' }
-      : { href: 'index.html#get-started', label: 'Get started' };
+      : { href: `${base}index.html#get-started`, label: 'Get started' };
 ---
 
 <header class="site-nav">
   <div class="wrap nav-inner">
     <a href={brandHref} class="brand">
-      <img src="assets/logo-docs-oss.svg" width="87" height="35" alt="Docs">
+      <img src={`${base}assets/logo-docs-oss.svg`} width="87" height="35" alt="Docs">
     </a>
     <nav class="nav-links" id="navLinks">
       <a href={crossLink('features')}>Features</a>
