@@ -141,8 +141,10 @@
   .trust-badges{display:flex; gap:12px; flex-wrap:wrap; justify-content:center;}
   .badge{
     display:flex; align-items:center; gap:7px; padding:8px 14px; background:#fff; border:1px solid var(--gray-150);
-    border-radius:9px; font-size:13.5px; font-weight:600; color:var(--gray-700);
+    border-radius:9px; font-size:13.5px; font-weight:600; color:var(--gray-700); text-decoration:none;
+    transition:border-color .2s ease, color .2s ease;
   }
+  .badge:hover{border-color:var(--brand-150); color:var(--brand-650);}
 
   /* ---------- features grid ---------- */
   .feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
@@ -464,6 +466,9 @@
 }
 .article blockquote p{font-size:inherit; color:inherit; margin-bottom:6px;}
 .article .quote-attr{display:block; font-size:14px; color:var(--gray-600); font-style:normal; margin-top:4px;}
+.article figure{margin:32px 0;}
+.article figure img{width:100%; height:auto; border-radius:12px; border:1px solid var(--gray-100); display:block;}
+.article figure figcaption{font-size:13px; color:var(--gray-600); margin-top:8px; text-align:center; line-height:1.5;}
 
 .punch-list{display:flex; flex-direction:column; gap:14px; margin:28px 0;}
 .punch-list li{

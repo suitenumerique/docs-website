@@ -16,16 +16,6 @@ const footerDesc =
     ? "An open-source, self-hostable alternative to Notion or Google Docs — built as a digital commons, for anyone to run."
     : "An open-source, self-hostable text editor — built as a digital commons, for anyone to run.";
 
-const fifthProjectItem =
-  current === 'manifesto'
-    ? { href: `${base}manifesto.html`, label: 'Manifesto', external: false }
-    : {
-        href: 'https://digitalpublicgoods.net/r/docs-collaborative-text-editing',
-        label: 'Digital Public Good listing',
-        external: true,
-      };
-
-const showFosdemLink = current !== 'home' && current !== 'manifesto';
 ---
 
 <footer>
@@ -45,15 +35,7 @@ const showFosdemLink = current !== 'home' && current !== 'manifesto';
           <li><a href={`${base}index.html#ai`}>AI</a></li>
           <li><a href={`${base}index.html#commons`}>Open source</a></li>
           <li><a href={`${base}roadmap.html`}>Roadmap</a></li>
-          <li>
-            {
-              fifthProjectItem.external ? (
-                <a href={fifthProjectItem.href} target="_blank" rel="noopener">{fifthProjectItem.label}</a>
-              ) : (
-                <a href={fifthProjectItem.href}>{fifthProjectItem.label}</a>
-              )
-            }
-          </li>
+          <li><a href={`${base}manifesto.html`}>Manifesto</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -63,12 +45,13 @@ const showFosdemLink = current !== 'home' && current !== 'manifesto';
           <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/installation/README.md" target="_blank" rel="noopener">Installation guide</a></li>
           <li><a href="https://github.com/suitenumerique/docs/blob/main/docs/instances.md" target="_blank" rel="noopener">Public instances</a></li>
           <li><a href="https://github.com/suitenumerique/docs/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing guide</a></li>
+          <li><a href="https://digitalpublicgoods.net/r/docs-collaborative-text-editing" target="_blank" rel="noopener">Digital Public Good listing</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h3>Community</h3>
         <ul>
-          {showFosdemLink && <li><a href={`${base}fosdem.html`}>FOSDEM talks</a></li>}
+          <li><a href={`${base}fosdem.html`}>FOSDEM talks</a></li>
           <li><a href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a></li>
           <li><a href="https://github.com/suitenumerique/docs/issues" target="_blank" rel="noopener">Report an issue</a></li>
         </ul>

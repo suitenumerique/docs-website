@@ -2,6 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { fetchManifestoHtml } from '../lib/manifesto';
+
+const contentHtml = await fetchManifestoHtml();
 ---
 
 <Layout title="Manifesto — Docs" description="Stop pretending it's paper. Why the office document is a costume software still wears, and why we built Docs to take it off.">
@@ -13,158 +16,7 @@ import Footer from '../components/Footer.astro';
   <section class="article">
     <div class="wrap">
       <div class="eyebrow reveal in">Manifesto</div>
-      <h1 class="reveal in">Stop pretending it's paper.</h1>
-      <p class="lead">Why we built Docs — and why the blank page your software opens on has been lying to you since 1995.</p>
-
-      <p>Open a blank document and you're handed a page: margins, a ruler, a page break waiting to happen. None of it means anything on a screen. It's a costume — paper, worn by software that no longer has any reason to wear it.</p>
-
-      <div class="stat-grid reveal">
-        <div class="stat-tile">
-          <span class="stat-num">8 hrs</span>
-          <span class="stat-label">a week spent producing just 5 documents</span>
-        </div>
-        <div class="stat-tile">
-          <span class="stat-num">30%</span>
-          <span class="stat-label">of that time spent formatting, not writing</span>
-        </div>
-        <div class="stat-tile">
-          <span class="stat-num">50%</span>
-          <span class="stat-label">of documents still don't follow the brand guidelines</span>
-        </div>
-      </div>
-      <p class="stat-source">Source: <a href="https://www.empowersuite.com/hubfs/Marketing/Downloads/Office%20Studie%202020/Die%20gro%C3%9Fe%20Office%20Software%20Studie_empower%20GmbH.pdf" target="_blank" rel="noopener">Nielsen study, conducted in Germany</a>.</p>
-
-      <p>That's not a rounding error. That's a full working day, every week, spent formatting text instead of writing it — and the formatting still doesn't work.</p>
-
-      <h2>Document = paper</h2>
-      <p>Designers have a word for this: <strong>skeuomorphism</strong> — shaping a new thing to resemble the old thing it replaced, long after the reason for the resemblance is gone. It made sense in 1995: a document was a sheet of paper you hadn't printed yet. In 2026, almost nobody prints. The page survived. The reason for it didn't.</p>
-
-      <div class="manifesto-figures reveal">
-        <figure>
-          <img src="assets/manifesto/office-paper.webp" width="700" height="757" alt="A cluttered 1990s office with arrows pointing to stacks of binders, folders, and paper covering every surface." loading="lazy">
-          <figcaption>The office, buried in paper. From Lars Tunbjörk's photo series "Les Bureaux" (1999).</figcaption>
-        </figure>
-        <figure>
-          <img src="assets/manifesto/libreoffice-writer.webp" width="1920" height="1040" alt="LibreOffice Writer open on a blank document, with margins and a ruler shown." loading="lazy">
-          <figcaption>LibreOffice Writer. Source: <a href="https://commons.wikimedia.org/wiki/File:LibreOffice_Writer_26.2.1.png" target="_blank" rel="noopener">Wikimedia Commons</a>.</figcaption>
-        </figure>
-      </div>
-
-      <p>The excellent "<a href="https://ia.net/topics/trapped-in-ms-office" target="_blank" rel="noopener">Trapped in Microsoft Office</a>" from IA.net puts it bluntly:</p>
-      <blockquote>
-        <p>The office model embedded in Microsoft Office is hierarchical, paper-bound, and authority-driven. It assumes that thinking culminates in a formatted artifact. This model made sense in 1995. It does not make sense in 2026.</p>
-      </blockquote>
-
-      <p>And office software doesn't have a monopoly on the word "document" either. A text document can be as plain as a <code>.txt</code> file — no margins, no ruler, no page count required. None of that fits what we actually need from a document today:</p>
-      <ul class="punch-list reveal">
-        <li>Text that doesn't need formatting.</li>
-        <li>Real-time collaboration between dozens of people.</li>
-        <li>An AI assistant reading and writing alongside you.</li>
-      </ul>
-      <p>A sheet of paper can't do any of that. So we stopped asking it to.</p>
-
-      <h2>Writing is the job, not the interruption</h2>
-      <p>Civil servants and office workers don't spend their days doing the work they were hired for. They spend it writing: emails, chat messages, AI prompts, and documents — office or not.</p>
-      <p>According to Asana's <em>Anatomy of Work Global Index</em> (2023–2025), employees spend 60% of their time on coordination — finding a file, chasing a colleague, checking which version is right — instead of the skilled work they're paid for. IDC puts a figure on the damage: lost files, outdated versions, and data-entry errors cost companies roughly 21% of total productivity.</p>
-      <p>The document isn't a minor detail. It's the job.</p>
-
-      <h2>A decade-long transition</h2>
-      <p>The private sector moved to collaborative tools — Google Workspace and friends — back in the 2010s. Government took a decade longer. What finally forced the shift wasn't strategy; it was Covid. Remote work made the old way of writing together impossible to ignore.</p>
-
-      <h2>Office fights you at every turn</h2>
-      <p>Editing text in office software is tedious by design: it optimizes for form over content, and it was never built for how we actually write together now. Here's where the friction really lives.</p>
-
-      <h3>Too many buttons, not enough writing</h3>
-      <p>An office worker spends around 23 hours a week in office applications — nearly three full workdays. Picking fonts, adjusting line spacing, redoing a layout: all of it form, none of it content.</p>
-
-      <h3>One document, twelve names</h3>
-      <p>Collaborating around text files is, itself, a source of friction. Offline collaboration between different parties quickly turns time-consuming and error-prone. Who hasn't ended up in an email thread with attachments whose file names betray exactly how many rounds of edits the text has survived — <code>vF_VF70.docx</code>, and worse?</p>
-      <p>Each employee loses 1 to 2 hours a week untangling misunderstandings caused by version chaos. And it's not just time: a study by Birnholtz and colleagues on tracked changes found that corrections shown without explanation are perceived as impolite, even aggressive. Writing is personal expression; an unexplained edit lands as a personal critique. Collaborative documents are now written at a scale of dozens, sometimes hundreds of people — and a tool built for one person at a desk was never going to hold that weight.</p>
-
-      <h3>Built for a desk, not a life</h3>
-      <p>Word, Excel, and PowerPoint files rely on OOXML, a format that stores the document as a zipped archive of interdependent XML files. Efficient for local use; a nightmare for online collaboration, since any simultaneous edit risks corrupting the relationships between the document's parts.</p>
-      <p><strong>Office 365's real-time collaboration doesn't actually use this format at all.</strong> Opened online, the document is silently converted to a web-friendly intermediate format, merged on Microsoft's servers, then rebuilt back into OOXML once you're done. On mobile, that workaround shows: a reduced, degraded editing experience. Yet around 30% of document collaboration already happens with remote colleagues, and a third of the tools people use at work are personal tools their employer never provided. The need for mobility is already here. The tools just don't meet it.</p>
-
-      <h2>What if it could be simpler?</h2>
-      <p>Tired of getting lost between versions of the same document, discovering at the last minute a colleague edited your shared presentation, or burning an afternoon on a layout your manager will reject on sight? There's a simpler way to work — one that gives you back both time and sanity.</p>
-
-      <h3>Fewer formatting options, more writing</h3>
-      <p>Docs ships with fewer than 15 layout options. No font pickers, no line-spacing menus — just paragraphs, quotes, and headings, managed through shortcuts, plus tables, lists, videos, and photos when you need them. The document's block format lets you move any of it around freely, without risk.</p>
-      <p>To be fair, some documents genuinely need heavy formatting — a legal contract, a print-ready brochure, a slide deck for print. Keep Word or InDesign for those, no argument. But most of what actually crosses a desk doesn't: a memo, a spec, a status update, a decision log. For that majority, reaching for something light on formatting — Docs or otherwise — isn't a compromise. It's doing yourself a favor.</p>
-
-      <h3>One document, one history</h3>
-      <p>Every version of your document is kept — including the sentence you swore you deleted last week. Documents connect into a tree structure, so your writing interlinks and builds a living knowledge base instead of a pile of dead files. Share a template with a new hire once, and nothing ever gets buried in a forgotten folder again.</p>
-
-      <h3>Built to be used anywhere</h3>
-      <p>Docs is web-native from the ground up — no office format to convert, no syncing between a "file" version and an "online" version. Same experience on desktop, tablet, or phone. Comment on a word, a sentence, a paragraph; check the history to see exactly what changed and why. Real-time collaboration builds trust because everyone sees who's writing what, live. When work isn't synchronous, changes are proposed for approval instead of imposed. Private mode covers everything else.</p>
-
-      <blockquote>
-        <p>When everyone works from the same source of information, collaboration becomes smoother and misunderstandings become rarer.</p>
-        <span class="quote-attr">— XWiki, internal documentation</span>
-      </blockquote>
-
-      <h2>Conclusion</h2>
-      <div class="table-wrap">
-        <table class="deps-table">
-          <thead>
-            <tr><th>Criteria</th><th>office software (legacy)</th><th>Docs</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Formatting</td>
-              <td>Dozens of options, ~7h/week on layout, 50% of documents off-brand</td>
-              <td>Fewer than 15 options, content comes first</td>
-            </tr>
-            <tr>
-              <td>Versions</td>
-              <td>Duplicated files ("vF_final (2).docx"), 1–2h/week lost to mix-ups</td>
-              <td>A single document, full history preserved</td>
-            </tr>
-            <tr>
-              <td>Online collaboration</td>
-              <td>Format conversion required, risk of corruption on simultaneous edits</td>
-              <td>Web-native, real-time editing, no conversion</td>
-            </tr>
-            <tr>
-              <td>Mobility</td>
-              <td>Degraded editing experience on mobile</td>
-              <td>Same experience on desktop, tablet, or phone</td>
-            </tr>
-            <tr>
-              <td>Trust</td>
-              <td>Unilateral edits, corrections perceived as aggressive</td>
-              <td>Targeted comments, changes proposed for approval</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p>Given these well-documented pain points — lost time, non-compliance, version conflicts, trust issues — Docs isn't just "the same thing, simpler." Its core choices — fewer formatting options, a single history, native web editing — each answer a concrete problem office workers face every day.</p>
-
-      <h3>Looking ahead</h3>
-      <p>A bigger question sits beneath these everyday frictions: the question of the document itself. An office document is flat — a sequence of pages, designed for print. Knowledge doesn't work that way; it's built through links, cross-references, and hierarchies, closer to synapses than a linear list. That's the shift behind tools like Notion or Obsidian: no longer just storing information, but continuously connecting it.</p>
-      <p>Docs moves the same direction with sub-documents: a document can contain others, branch out, and form a living tree instead of a pile of isolated files. That turns a shared folder into an actual knowledge base — one you tend and grow — instead of a graveyard of "final version" files.</p>
-      <p>In an age of increasingly networked knowledge, can the A4 page — paper or not — still be the right standard for documenting our working lives?</p>
-
-      <h2>What lies ahead with AI</h2>
-      <p>Andrej Karpathy <a href="https://x.com/karpathy/status/2039805659525644595" target="_blank" rel="noopener">recently described</a> a workflow that's become central to how he does research: he feeds an LLM raw source material — articles, papers, repos — and has it incrementally "compile" that material into a wiki of interlinked markdown files. He barely touches the wiki by hand anymore; the model writes it, maintains it, answers questions against it, and files its own outputs back in so the knowledge base keeps compounding. His conclusion:</p>
-      <blockquote>
-        <p>I think there is room here for an incredible new product instead of a hacky collection of scripts.</p>
-        <span class="quote-attr">— Andrej Karpathy</span>
-      </blockquote>
-      <p>He's right — but look closely at what he actually built. It's personal. One researcher, one Obsidian vault, one model quietly compiling one person's folder of raw material into one person's wiki.</p>
-      <p>That's exactly the gap Guillaume Olivieri, co-founder of Perceptio, <a href="https://www.linkedin.com/pulse/passer-du-document-au-contexte-repenser-le-knowledge-work-olivieri-valre/" target="_blank" rel="noopener">puts his finger on</a> from the other direction. His argument: knowledge work was never really about documents. The real work happens in the interstices — in the standup comment explaining why an option got dropped, in the client call that becomes the actual rationale for a spec nobody wrote down. Organize work around discrete documents, and the <em>why</em> evaporates the moment the file is closed: a new hire asks why something is done a certain way, the answer is "it's in the wiki," and the wiki only ever recorded the <em>what</em>. His proposed alternative is what he calls a "contextual continuum" — a living context where every decision stays wired to its sources and reasoning, where contributions interleave instead of forking into fifteen copies of the same PRD, where organizational memory compounds instead of resetting with every new hire and every departure.</p>
-      <p>Put Karpathy's workflow next to Olivieri's diagnosis and the next frontier comes into focus. It isn't personal LLM knowledge bases — Karpathy already nailed retrieval and synthesis for an audience of one. It's collaborative ones. Nobody has yet solved that for a team: for the actual, messy, many-authored context a strategy, a product, or a policy is really built from.</p>
-      <p>That's the opening for Docs, and it isn't a coincidence. Docs already carries the plumbing an individual has to hand-roll with a raw folder and a pile of scripts:</p>
-      <ul>
-        <li><strong>A tree that's already a wiki.</strong> Karpathy compiles a folder of markdown into categorized, cross-linked articles by hand-off to an LLM. Docs' sub-documents <em>are</em> that structure already — except several people build the tree together, live, instead of one person curating a private vault.</li>
-        <li><strong>Structured content, not a blob.</strong> Docs stores writing as blocks, not a flat .docx byte soup. That's exactly the shape a model wants to ingest, summarize, and re-file — no wrestling legacy formatting out of the way first.</li>
-        <li><strong>The "why," already captured.</strong> Olivieri's central complaint is that reasoning disappears the moment a decision hardens into a document. Docs' comments, pinned to a precise word or sentence, are exactly where that reasoning already lives — a model compiling the wiki doesn't need to reconstruct the why, it just needs to read it.</li>
-        <li><strong>Multi-author by default, with attribution intact.</strong> Real-time collaboration means Docs already tracks who wrote what, and when — the same trust mechanism a shared knowledge base needs the moment a model starts writing into it too: proposed edits, not silent overwrites, whoever — or whatever — the author is.</li>
-      </ul>
-      <p>Picture Docs a few years out: every document you write feeds a shared base that a model is continuously compiling and re-linking — not a personal wiki you tend alone in Obsidian, but the collective one your whole team is already writing into just by doing its job. Ask three months later "why did we choose X over Y," and instead of fifteen versions of a PRD to dig through, you get an answer with the reasoning and the people behind it still attached. A senior hire leaves, and the organization doesn't lose five years of judgment with them, because that judgment was never trapped in one head, or one file — it was already woven into the context everyone shares.</p>
-      <p>That's the bet: not another AI feature bolted onto a document editor, but the first knowledge base built to be collaborative from day one — because the tool it grows out of already was.</p>
-
-      <p class="closing-line reveal">The page was never the point. Knowledge was.<br>It's time our tools admitted that.</p>
+      <Fragment set:html={contentHtml} />
     </div>
   </section>
 
@@ -175,7 +27,7 @@ import Footer from '../components/Footer.astro';
         <h2>Ready to stop formatting and start writing?</h2>
         <p>No blank page. No ruler. No margins that mean nothing.</p>
         <div class="hero-ctas">
-          <a class="btn btn-primary btn-lg" href="https://docs.la-suite.eu/docs/9137bbb5-3e8a-4ff7-8a36-fcc4e8bd57f4/" target="_blank" rel="noopener">Open a live demo document →</a>
+          <a class="btn btn-primary btn-lg" href="https://demo.docs.la-suite.eu/docs/6d1b6f7f-db33-4673-9277-4bf47b9881ec/" target="_blank" rel="noopener">Open a live demo document →</a>
           <a class="btn btn-secondary btn-lg" href="roadmap.html">See the roadmap</a>
         </div>
       </div>
