@@ -9,21 +9,20 @@ Static site for [Docs](https://github.com/suitenumerique/docs), the open-source 
 - `src/pages/index.astro` — homepage
 - `src/pages/manifesto.astro` — manifesto
 - `src/pages/roadmap.astro` — roadmap
+- `src/pages/community-calls.astro` — community calls
 - `src/pages/fosdem.astro` — FOSDEM talks
 
 Shared chrome (nav, footer, `<head>`) lives in `src/components/Header.astro`, `src/components/Footer.astro`, and `src/layouts/Layout.astro`. The build is configured (`astro.config.mjs`, `build.format: 'file'`) to output flat files (`roadmap.html`, not `roadmap/index.html`), so every existing link/bookmark keeps working unchanged.
 
-## Roadmap sync
+## Content from Docs
 
-The roadmap lists aren't hand-written — they're published live from [Docs](https://docs.numerique.gouv.fr) itself. The team maintains the actual roadmap as regular Docs documents (shared publicly), and this site pulls that content straight from Docs' own public API at **build time**. In other words: the landing page for Docs is itself a Docs user, dogfooding the product it's promoting as its editorial/publishing workflow for the roadmap.
+Most of this site's editorial content isn't hard-coded — it's fetched and laid out directly from public [Docs](https://docs.numerique.gouv.fr) documents at **build time**, via Docs' own public `formatted-content` API. The team authors the roadmap, the manifesto, and community call recaps as regular Docs documents (shared publicly), and this site pulls that content straight in. In other words: the landing page for Docs is itself a Docs user, dogfooding the product it's promoting as its editorial/publishing workflow.
 
-`src/lib/roadmap.ts` fetches those documents via the public `formatted-content` API and parses them into structured items. `src/pages/roadmap.astro` and the homepage's roadmap teaser both render from that same data (via the shared `src/components/RoadmapItem.astro` component) — no duplication, no manual sync between the two.
+That gets us real flexibility on the publishing side: updating a roadmap item, tweaking the manifesto, or posting a community call recap is just editing a Docs document — no PR, no manual redeploy, no separate CMS.
 
-This is fetched fresh on every build, not cached or committed — so content freshness is entirely a function of how often the site gets rebuilt (see below).
+Each `src/lib/*.ts` file (`roadmap.ts`, `manifesto.ts`, `community-calls.ts`) fetches its source document(s) via the public API and parses them into structured data or ready-to-render HTML; the corresponding `src/pages/*.astro` files render from that data, sharing components where it makes sense (e.g. `src/components/RoadmapItem.astro`, used by both `roadmap.astro` and the homepage's roadmap teaser) — no duplication, no manual sync.
 
-## Blog
-
-Not live yet, but planned: it'll follow the same pattern as the roadmap (and as [we_make_commons-website](https://github.com/virgile-dev/we_make_commons-website)'s blog) — posts authored as Docs documents, fetched at build time via `src/lib/`, rendered through Astro pages. No separate CMS.
+Content is fetched fresh on every build, never cached or committed — so freshness is entirely a function of how often the site gets rebuilt (see Deployment below). A blog, were we to add one, would follow the exact same pattern (and as [we_make_commons-website](https://github.com/virgile-dev/we_make_commons-website)'s blog already does): posts authored as Docs documents, fetched at build time, rendered through Astro pages.
 
 ## Deployment
 
