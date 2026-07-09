@@ -1,0 +1,47 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { fetchCommunityCallChildren, fetchCommunityCall } from '../../lib/community-calls';
+
+export async function getStaticPaths() {
+  const children = await fetchCommunityCallChildren();
+  return children.map((child) => ({
+    params: { slug: child.slug },
+    props: { child },
+  }));
+}
+
+interface Props {
+  child: Awaited<ReturnType<typeof fetchCommunityCallChildren>>[number];
+}
+
+const { child } = Astro.props;
+const call = await fetchCommunityCall(child);
+---
+
+<Layout
+  title={`${call.title} — Community calls — Docs`}
+  description={`Docs community call: ${call.title}.`}
+>
+  <Header current="community-calls" />
+
+<main id="top">
+
+  <section class="article" style="padding-bottom:8px;">
+    <div class="wrap">
+      <a href="/community-calls.html" class="back-link">← Back to community calls</a>
+      <h1 class="reveal in">{call.title}</h1>
+      <div class="call-meta" style="margin-bottom:8px;">
+        {call.dateDisplay && <time datetime={call.date}>{call.dateDisplay}</time>}
+        {call.dateDisplay && call.author && <span class="sep-dot">·</span>}
+        {call.author && <span>{call.author}</span>}
+      </div>
+      <Fragment set:html={call.contentHtml} />
+    </div>
+  </section>
+
+</main>
+
+  <Footer current="community-calls" />
+</Layout>

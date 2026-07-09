@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { fetchCommunityCalls, fetchCommunityCallsIntro } from '../lib/community-calls';
+
+const [calls, introHtml] = await Promise.all([fetchCommunityCalls(), fetchCommunityCallsIntro()]);
+---
+
+<Layout title="Community calls — Docs" description="Every quarter, the Docs maintainers host a community call to share roadmap updates and answer questions. Browse the recaps and replays.">
+  <Header current="community-calls" />
+
+<main id="top">
+
+  <!-- ================= INTRO ================= -->
+  <section class="article">
+    <div class="wrap">
+      <div class="eyebrow reveal in">Community</div>
+      <h1 class="reveal in">Community calls</h1>
+      <Fragment set:html={introHtml} />
+    </div>
+  </section>
+
+  <!-- ================= CALLS LIST ================= -->
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="call-list">
+        {calls.map((call) => (
+          <a class="call-card reveal" href={`community-calls/${call.slug}.html`}>
+            <h3>{call.title}</h3>
+            <div class="call-meta">
+              {call.dateDisplay && <time datetime={call.date}>{call.dateDisplay}</time>}
+              {call.dateDisplay && call.author && <span class="sep-dot">·</span>}
+              {call.author && <span>{call.author}</span>}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section>
+    <div class="wrap">
+      <div class="cta-band reveal">
+        <h2>Want to join the next one?</h2>
+        <p>Come chat with the maintainers and the community between calls.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary btn-lg" href="https://matrix.to/#/#docs-official:matrix.org" target="_blank" rel="noopener">Chat on Matrix</a>
+          <a class="btn btn-secondary btn-lg" href="roadmap.html">See the roadmap</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+  <Footer current="community-calls" />
+</Layout>
