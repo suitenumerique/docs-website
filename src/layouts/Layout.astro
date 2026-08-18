@@ -29,5 +29,8 @@ const base = (import.meta.env.BASE_URL + '/').replace('//', '/');
 <slot />
 
 <script src={`${base}script.js`} is:inline></script>
+<script>
+  import '../lib/posthog';
+</script>
 </body>
 </html>
