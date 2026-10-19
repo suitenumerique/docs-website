@@ -24,9 +24,11 @@ export const ROADMAP_ROOT_ID = 'd1d3788e-c619-41ff-abe8-2d079da2f084';
 
 const FUNDER_ABBREVIATIONS: Record<string, string> = {
   'European Commission': 'EC',
+  CE: 'EC', // French abbreviation (Commission européenne)
 };
 
 const FLAG_RE = /[\u{1F1E6}-\u{1F1FF}]{2}/u;
+const FLAG_FOLLOWED_BY_TEXT_RE = /([\u{1F1E6}-\u{1F1FF}]{2})\s+(?=[^\s,])/gu;
 const MD_LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
 
 export interface RoadmapItem {
@@ -55,7 +57,10 @@ function renderTitle(rawTitle: string): { prefix: string; emphasis: string } {
 }
 
 function parseFunders(text: string): string[] {
-  const tokens = text.trim().split(/,\s*|\s+and\s+/);
+  // Funders are written "Name 🇫🇷", either comma-separated or just one
+  // after the other ("DINUM 🇫🇷 CE 🇪🇺") — a flag followed by more text
+  // ends a funder, so treat it as a separator too.
+  const tokens = text.trim().replace(FLAG_FOLLOWED_BY_TEXT_RE, '$1, ').split(/,\s*|\s+and\s+/);
   const pills: string[] = [];
   for (let token of tokens) {
     token = token.replace(/^and\s+/i, '').trim();
@@ -69,24 +74,32 @@ function parseFunders(text: string): string[] {
   return pills;
 }
 
+const STATUS_WORDS_RE = /\b(planned|delivered|shipped|to be confirmed)\b/i;
+
+function isStatusSegment(segment: string): boolean {
+  return segment.includes('`') || segment.includes('✅') || STATUS_WORDS_RE.test(segment);
+}
+
 function parseStatus(segment: string): { cssClass: 'planned' | 'shipped'; text: string } {
   // Anything that isn't explicitly shipped (✅) is treated as "planned" —
   // this also covers newer statuses like "To be confirmed `?`" or
   // "🌀 : `in beta`" that don't say the word "Planned" or use 🌀.
   const isPlanned = !segment.includes('✅');
-  const codeMatch = segment.match(/`([^`]*)`/);
+  // The period is usually in backticks (`S2`, `Q1 ✅`), but delivered
+  // items are written plainly: "Delivered S2 ✅ (mermaid.js and LaTeX)".
+  const codeMatch = segment.match(/`([^`]*)`/) ?? segment.match(/\b([SQ]\d)\b/);
   const codeRaw = codeMatch ? codeMatch[1] : '';
   const codeClean = codeRaw.replace(/[✅\u{1F300}]/gu, '').trim();
   const codeDisplay = codeClean === '?' ? 'TBD' : codeClean;
 
   let rest = segment;
   if (codeMatch) rest = rest.replace(codeMatch[0], '');
-  rest = rest.replace(/Planned:?/, '').replace(/To be confirmed:?/, '');
+  rest = rest.replace(/(planned|delivered|shipped|to be confirmed):?/gi, '');
   rest = rest.replace(/✅/g, '').replace(/\u{1F300}/gu, '');
   const extra = rest.replace(/^[\s|:]+|[\s|:]+$/g, '').trim();
 
   const label = isPlanned ? 'Planned' : 'Shipped';
-  let text = `${label} · ${codeDisplay}`;
+  let text = codeDisplay ? `${label} · ${codeDisplay}` : label;
   if (extra) text += ` ${extra}`;
   return { cssClass: isPlanned ? 'planned' : 'shipped', text };
 }
@@ -148,7 +161,7 @@ function parseItem(title: string, body: string): RoadmapItem {
     for (const seg of segments) {
       if (seg.startsWith('Funded by:')) {
         funders = parseFunders(seg.slice('Funded by:'.length));
-      } else if (seg.includes('`') || seg.includes('Planned')) {
+      } else if (isStatusSegment(seg)) {
         status = parseStatus(seg);
       } else {
         parseLinks(seg, prLinks, otherLinks);
@@ -194,7 +207,7 @@ function parseItem(title: string, body: string): RoadmapItem {
 }
 
 function parseItems(markdownContent: string): RoadmapItem[] {
-  // Semester/section subheadings aren't currently needed for structure.
+  // `## ` section headings are handled by parseGroups, not here.
   const content = markdownContent
     .split('\n')
     .filter((line) => !line.startsWith('## '))
@@ -235,18 +248,46 @@ async function fetchHtml(docId: string): Promise<string> {
   return content;
 }
 
+export interface RoadmapGroup {
+  heading: string | null; // the doc's `## ` heading, e.g. "Delivered 🚀"
+  items: RoadmapItem[];
+}
+
+// Splits a roadmap doc on its `## ` headings (e.g. "In progress or
+// upcoming 🔧" / "Delivered 🚀"). Items before the first heading, or in a
+// doc with no headings at all, land in a heading-less group.
+function parseGroups(markdown: string): RoadmapGroup[] {
+  const parts = markdown.split(/^## (.+)$/m);
+  const groups: RoadmapGroup[] = [{ heading: null, items: parseItems(parts[0]) }];
+  for (let i = 1; i < parts.length; i += 2) {
+    groups.push({ heading: parts[i].trim(), items: parseItems(parts[i + 1] ?? '') });
+  }
+  return groups.filter((g) => g.items.length > 0);
+}
+
 // Memoized per document id so pages that both need the same section
 // (e.g. the homepage teaser and the roadmap page) only fetch it once
 // per build.
-const cache = new Map<string, Promise<RoadmapItem[]>>();
+const cache = new Map<string, Promise<RoadmapGroup[]>>();
 
-export function fetchRoadmapSection(docId: string): Promise<RoadmapItem[]> {
+export function fetchRoadmapGroups(docId: string): Promise<RoadmapGroup[]> {
   let promise = cache.get(docId);
   if (!promise) {
-    promise = fetchMarkdown(docId).then(parseItems);
+    promise = fetchMarkdown(docId).then(parseGroups);
     cache.set(docId, promise);
   }
   return promise;
+}
+
+export async function fetchRoadmapSection(docId: string): Promise<RoadmapItem[]> {
+  return (await fetchRoadmapGroups(docId)).flatMap((g) => g.items);
+}
+
+// Short label for compact lists: the ✨-emphasized part of the title
+// ("Know the length of a document with ✨ word count" -> "Word count").
+export function shortTitle(item: RoadmapItem): string {
+  const text = item.titleEmphasis || item.titlePrefix;
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 export interface RoadmapChild {

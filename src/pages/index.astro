@@ -3,10 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import RoadmapItem from '../components/RoadmapItem.astro';
-import { fetchRoadmapSection, ROADMAP_SOURCES } from '../lib/roadmap';
+import { fetchRoadmapSection, ROADMAP_SOURCES, shortTitle } from '../lib/roadmap';
 import { fetchGitHubStars, formatStarCount } from '../lib/github-stars';
 
-const planned = await fetchRoadmapSection(ROADMAP_SOURCES.planned);
+const semesterItems = await fetchRoadmapSection(ROADMAP_SOURCES.planned);
+const upcoming = semesterItems.filter((item) => item.statusClass !== 'shipped');
+const shipped = semesterItems.filter((item) => item.statusClass === 'shipped');
 const stars = await fetchGitHubStars();
 ---
 
@@ -369,11 +371,30 @@ const stars = await fetchGitHubStars();
       <div class="section-head reveal">
         <div class="eyebrow">Roadmap</div>
         <h2>Built in the open, funded in the open</h2>
-        <p>What's planned for Semester 2, 2026 — and the public institutions funding it.</p>
+        <p>What we're building in Semester 2, 2026 — and the public institutions funding it.</p>
       </div>
-      <div class="roadmap-list">
-        {planned.map((item) => <RoadmapItem item={item} />)}
+      <div class="roadmap-group">
+        <h3 class="roadmap-group-title">In progress or upcoming</h3>
+        <div class="roadmap-list">
+          {upcoming.map((item) => <RoadmapItem item={item} />)}
+        </div>
       </div>
+      {shipped.length > 0 && (
+        <div class="roadmap-group reveal">
+          <h3 class="roadmap-group-title">Already shipped this semester <span class="roadmap-group-count">· {shipped.length} of {semesterItems.length}</span></h3>
+          <ul class="shipped-strip">
+            {shipped.map((item) => {
+              const href = item.links[0]?.url;
+              return (
+                <li>
+                  <span class="shipped-check" aria-hidden="true">✓</span>
+                  {href ? <a href={href} target="_blank" rel="noopener">{shortTitle(item)}</a> : shortTitle(item)}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
       <p style="text-align:center; margin-top:32px;">
         <a class="btn btn-secondary" href="roadmap.html">See the full roadmap →</a>
       </p>
