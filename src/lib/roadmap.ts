@@ -274,7 +274,11 @@ export function fetchRoadmapChildren(): Promise<RoadmapChild[]> {
       }
       const payload = await res.json();
       const results: { id: string; title: string }[] = payload.results ?? [];
-      return results.map((r) => ({ id: r.id, title: r.title, slug: slugify(r.title) }));
+      // Skip children whose title slugifies to nothing (e.g. a freshly
+      // created, still-untitled doc) — they'd produce an empty route param.
+      return results
+        .map((r) => ({ id: r.id, title: r.title, slug: slugify(r.title) }))
+        .filter((child) => child.slug);
     })();
   }
   return childrenCache;
