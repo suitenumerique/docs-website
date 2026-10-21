@@ -29,6 +29,11 @@ const manifestoItem =
     ? { href: '#top', label: 'Manifesto' }
     : { href: `${base}manifesto.html`, label: 'Manifesto' };
 
+const communityCallsItem =
+  current === 'community-calls'
+    ? { href: '#top', label: 'Community calls' }
+    : { href: `${base}community-calls.html`, label: 'Community calls' };
+
 const getStartedItem =
   current === 'home'
     ? { href: '#get-started', label: 'Get started' }
@@ -44,6 +49,7 @@ const getStartedItem =
       <a href={crossLink('features')}>Features</a>
       <a href={roadmapItem.href}>{roadmapItem.label}</a>
       <a href={manifestoItem.href}>{manifestoItem.label}</a>
+      <a href={communityCallsItem.href}>{communityCallsItem.label}</a>
       <a href={getStartedItem.href}>{getStartedItem.label}</a>
       <a href={crossLink('faq')}>FAQ</a>
     </nav>

@@ -2,9 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { fetchCommunityCalls, fetchCommunityCallsIntro } from '../lib/community-calls';
+import CallCard from '../components/CallCard.astro';
+import { fetchCommunityCalls, fetchCommunityCallsIntro, splitCommunityCalls } from '../lib/community-calls';
 
 const [calls, introHtml] = await Promise.all([fetchCommunityCalls(), fetchCommunityCallsIntro()]);
+const { upcoming, past } = splitCommunityCalls(calls);
 ---
 
 <Layout title="Community calls — Docs" description="Every quarter, the Docs maintainers host a community call to share roadmap updates and answer questions. Browse the recaps and replays.">
@@ -24,18 +26,22 @@ const [calls, introHtml] = await Promise.all([fetchCommunityCalls(), fetchCommun
   <!-- ================= CALLS LIST ================= -->
   <section style="padding-top:0;">
     <div class="wrap">
-      <div class="call-list">
-        {calls.map((call) => (
-          <a class="call-card reveal" href={`community-calls/${call.slug}.html`}>
-            <h3>{call.title}</h3>
-            <div class="call-meta">
-              {call.dateDisplay && <time datetime={call.date}>{call.dateDisplay}</time>}
-              {call.dateDisplay && call.author && <span class="sep-dot">·</span>}
-              {call.author && <span>{call.author}</span>}
-            </div>
-          </a>
-        ))}
-      </div>
+      {upcoming.length > 0 && (
+        <div class="roadmap-group">
+          <h2 class="roadmap-group-title">Upcoming</h2>
+          <div class="call-list">
+            {upcoming.map((call) => <CallCard call={call} />)}
+          </div>
+        </div>
+      )}
+      {past.length > 0 && (
+        <div class="roadmap-group">
+          <h2 class="roadmap-group-title">Past · replays</h2>
+          <div class="call-list">
+            {past.map((call) => <CallCard call={call} />)}
+          </div>
+        </div>
+      )}
     </div>
   </section>
 

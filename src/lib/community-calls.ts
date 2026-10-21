@@ -10,9 +10,14 @@
 //   ---
 //   date: 2026/07/09
 //   author: virgile-dev
+//   when: 2026/07/16 13:00 CEST
 //   ---
 //
-// We read date/author from the markdown export (plain text, easy to parse)
+// `date` is when the post was written; the optional `when` is when the call
+// itself takes place (date, then free-form time text) and drives the
+// upcoming/past split on /community-calls. Without it we fall back to `date`.
+//
+// We read date/author/when from the markdown export (plain text, easy to parse)
 // and strip the equivalent hidden paragraphs from the HTML export before
 // rendering the rest of the doc as the call's body.
 
@@ -60,15 +65,25 @@ function slugify(title: string): string {
 // `\` (markdown hard-break escape) the Docs editor adds around it.
 const FRONTMATTER_RE = /^-{3,}[ \t]*\n([\s\S]*?)\n-{3,}[ \t]*\n?/;
 
-function parseFrontmatter(markdown: string): { date: string; author: string } {
+interface Frontmatter {
+  date: string;
+  author: string;
+  when: string; // ISO yyyy-mm-dd, or ''
+  whenTime: string; // free-form time text after the date, e.g. "13:00 CEST"
+}
+
+function parseFrontmatter(markdown: string): Frontmatter {
   const match = markdown.match(FRONTMATTER_RE);
-  if (!match) return { date: '', author: '' };
+  if (!match) return { date: '', author: '', when: '', whenTime: '' };
   const header = match[1];
   const dateMatch = header.match(/date:\s*([0-9]{4})\/([0-9]{2})\/([0-9]{2})/);
   const authorMatch = header.match(/author:\s*([^\n\\]+)/);
+  const whenMatch = header.match(/when:\s*([0-9]{4})\/([0-9]{2})\/([0-9]{2})[ \t]*([^\n\\]*)/);
   return {
     date: dateMatch ? `${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}` : '',
     author: authorMatch ? authorMatch[1].trim() : '',
+    when: whenMatch ? `${whenMatch[1]}-${whenMatch[2]}-${whenMatch[3]}` : '',
+    whenTime: whenMatch ? whenMatch[4].trim() : '',
   };
 }
 
@@ -132,6 +147,9 @@ export interface CommunityCall {
   date: string; // ISO yyyy-mm-dd, or '' if the doc's front-matter is missing/malformed
   dateDisplay: string;
   author: string;
+  // When the call takes place: the `when` front-matter if set, else `date`.
+  eventDate: string;
+  eventDisplay: string;
   contentHtml: string;
 }
 
@@ -142,7 +160,9 @@ export function fetchCommunityCall(child: CommunityCallChild): Promise<Community
   if (!promise) {
     promise = (async () => {
       const [markdown, html] = await Promise.all([fetchMarkdown(child.id), fetchHtml(child.id)]);
-      const { date, author } = parseFrontmatter(markdown);
+      const { date, author, when, whenTime } = parseFrontmatter(markdown);
+      const eventDate = when || date;
+      const eventDisplay = [formatDateDisplay(eventDate), when && whenTime].filter(Boolean).join(' · ');
       return {
         id: child.id,
         title: child.title,
@@ -150,6 +170,8 @@ export function fetchCommunityCall(child: CommunityCallChild): Promise<Community
         date,
         dateDisplay: formatDateDisplay(date),
         author,
+        eventDate,
+        eventDisplay,
         contentHtml: addVideoControls(stripFrontmatterHtml(html)),
       };
     })();
@@ -170,6 +192,24 @@ export function fetchCommunityCalls(): Promise<CommunityCall[]> {
     })();
   }
   return allCallsCache;
+}
+
+// Splits calls around the build date: calls happening today or later are
+// upcoming (soonest first), the rest are past (newest first). Undated calls
+// count as past. Since this runs at build time, a call only moves to "past"
+// on the next rebuild after it happens.
+export function splitCommunityCalls(calls: CommunityCall[]): {
+  upcoming: CommunityCall[];
+  past: CommunityCall[];
+} {
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = calls
+    .filter((c) => c.eventDate && c.eventDate >= today)
+    .sort((a, b) => a.eventDate.localeCompare(b.eventDate));
+  const past = calls
+    .filter((c) => !c.eventDate || c.eventDate < today)
+    .sort((a, b) => b.eventDate.localeCompare(a.eventDate));
+  return { upcoming, past };
 }
 
 let introCache: Promise<string> | null = null;

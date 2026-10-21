@@ -1,0 +1,18 @@
+---
+import type { CommunityCall } from '../lib/community-calls';
+
+interface Props {
+  call: CommunityCall;
+}
+
+const { call } = Astro.props;
+---
+
+<a class="call-card reveal" href={`community-calls/${call.slug}.html`}>
+  <h3>{call.title}</h3>
+  <div class="call-meta">
+    {call.eventDisplay && <time datetime={call.eventDate}>{call.eventDisplay}</time>}
+    {call.eventDisplay && call.author && <span class="sep-dot">·</span>}
+    {call.author && <span>{call.author}</span>}
+  </div>
+</a>
