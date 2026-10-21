@@ -88,16 +88,30 @@ function parseFrontmatter(markdown: string): Frontmatter {
 }
 
 // Mirrors FRONTMATTER_RE but on the HTML export, where the same block
-// renders as leading <p> elements with transparent-on-dark "hidden text"
-// styling instead of plain `---` lines.
-const HIDDEN_FRONTMATTER_P_RE = /^<p>(?:(?!<\/p>)[\s\S])*?rgba\(0,\s*0,\s*0,\s*0\)(?:(?!<\/p>)[\s\S])*?<\/p>/;
+// renders as leading <p> elements (styled as "hidden text", though authors
+// don't always apply that styling consistently). We match on the text
+// itself: if the doc opens with a `---` paragraph, drop paragraphs up to and
+// including the one that closes the block with `---`.
+const LEADING_P_RE = /^<p>([\s\S]*?)<\/p>/;
+const FRONTMATTER_TEXT_RE = /^-{3,}[\s\S]+-{3,}$/;
+
+function paragraphText(innerHtml: string): string {
+  return innerHtml.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]+>/g, '').trim();
+}
 
 function stripFrontmatterHtml(html: string): string {
   let rest = html.trimStart();
-  while (HIDDEN_FRONTMATTER_P_RE.test(rest)) {
-    rest = rest.replace(HIDDEN_FRONTMATTER_P_RE, '').trimStart();
+  let text = '';
+  let match: RegExpMatchArray | null;
+  while ((match = rest.match(LEADING_P_RE))) {
+    const pText = paragraphText(match[1]);
+    if (!text && !pText.startsWith('---')) break;
+    text = text ? `${text}\n${pText}` : pText;
+    rest = rest.slice(match[0].length).trimStart();
+    if (FRONTMATTER_TEXT_RE.test(text)) return rest;
   }
-  return rest;
+  // No complete `--- ... ---` block at the top: leave the doc untouched.
+  return html;
 }
 
 // The Docs HTML export emits bare `<video src="...">` tags (no playback
@@ -111,6 +125,24 @@ function formatDateDisplay(isoDate: string): string {
   const date = new Date(`${isoDate}T00:00:00Z`);
   if (Number.isNaN(date.getTime())) return '';
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+}
+
+const TZ_OFFSETS: Record<string, string> = {
+  UTC: 'Z',
+  GMT: 'Z',
+  CET: '+01:00',
+  CEST: '+02:00',
+};
+
+// Reads the last HH:MM in e.g. "13:00 CEST" or "13:00 – 14:00 CEST" (so a
+// range resolves to its end time) plus a known timezone abbreviation.
+function parseEventEnd(isoDate: string, timeText: string): number | null {
+  const times = [...timeText.matchAll(/\b([0-9]{1,2}):([0-9]{2})\b/g)];
+  const tz = timeText.match(/\b(UTC|GMT|CEST|CET)\b/);
+  if (!times.length || !tz) return null;
+  const [, hh, mm] = times[times.length - 1];
+  const ts = Date.parse(`${isoDate}T${hh.padStart(2, '0')}:${mm}:00${TZ_OFFSETS[tz[1]]}`);
+  return Number.isNaN(ts) ? null : ts;
 }
 
 export interface CommunityCallChild {
@@ -150,6 +182,9 @@ export interface CommunityCall {
   // When the call takes place: the `when` front-matter if set, else `date`.
   eventDate: string;
   eventDisplay: string;
+  // End of the call (or start, if no end time is given) as a Unix ms
+  // timestamp, when `when` has a parseable time and timezone; else null.
+  eventEndsAt: number | null;
   contentHtml: string;
 }
 
@@ -172,6 +207,7 @@ export function fetchCommunityCall(child: CommunityCallChild): Promise<Community
         author,
         eventDate,
         eventDisplay,
+        eventEndsAt: when ? parseEventEnd(when, whenTime) : null,
         contentHtml: addVideoControls(stripFrontmatterHtml(html)),
       };
     })();
@@ -194,20 +230,24 @@ export function fetchCommunityCalls(): Promise<CommunityCall[]> {
   return allCallsCache;
 }
 
-// Splits calls around the build date: calls happening today or later are
-// upcoming (soonest first), the rest are past (newest first). Undated calls
-// count as past. Since this runs at build time, a call only moves to "past"
+// Splits calls around the build time: calls that haven't ended yet are
+// upcoming (soonest first), the rest are past (newest first). A call whose
+// `when` has a time + timezone ends at that time; otherwise it stays
+// upcoming through the whole day. Undated calls count as past. Since this runs at build time, a call only moves to "past"
 // on the next rebuild after it happens.
 export function splitCommunityCalls(calls: CommunityCall[]): {
   upcoming: CommunityCall[];
   past: CommunityCall[];
 } {
-  const today = new Date().toISOString().slice(0, 10);
+  const now = Date.now();
+  const today = new Date(now).toISOString().slice(0, 10);
+  const isUpcoming = (c: CommunityCall) =>
+    c.eventEndsAt !== null ? c.eventEndsAt > now : Boolean(c.eventDate) && c.eventDate >= today;
   const upcoming = calls
-    .filter((c) => c.eventDate && c.eventDate >= today)
+    .filter(isUpcoming)
     .sort((a, b) => a.eventDate.localeCompare(b.eventDate));
   const past = calls
-    .filter((c) => !c.eventDate || c.eventDate < today)
+    .filter((c) => !isUpcoming(c))
     .sort((a, b) => b.eventDate.localeCompare(a.eventDate));
   return { upcoming, past };
 }
